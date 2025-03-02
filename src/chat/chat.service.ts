@@ -11,8 +11,6 @@ import { CoreService } from 'src/core/core.service';
 
 
 
-
-
 @Injectable()
 export class ChatService {
   constructor(private readonly prisma:  PrismaService,
