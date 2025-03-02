@@ -10,7 +10,6 @@ import { Session } from "@prisma/client";
 export class CoreService {
   constructor(private readonly prisma:  PrismaService){}
 
-
   async getBySessionID(sessionID:string): Promise<Session>{
     const session = await this.prisma.session.findUnique({
       where:{
