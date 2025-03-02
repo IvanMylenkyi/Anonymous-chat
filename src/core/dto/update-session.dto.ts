@@ -1,8 +1,8 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateCoreDto } from './create-core.dto';
 import { IsBoolean, IsOptional } from '@nestjs/class-validator';
+import { CreateSessionDto } from './create-session.dto';
 
-export class UpdateCoreDto extends PartialType(CreateCoreDto) {
+export class UpdateSessionDto extends PartialType(CreateSessionDto) {
   id: number;
   @IsOptional()
   @IsBoolean()

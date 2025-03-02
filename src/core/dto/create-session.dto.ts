@@ -1,7 +1,7 @@
 import { IsOptional, IsString, } from "@nestjs/class-validator";
 
 
-export class CreateCoreDto {
+export class CreateSessionDto {
     @IsString()
     sessionID: string;
 
