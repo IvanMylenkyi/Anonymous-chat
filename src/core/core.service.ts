@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { Chat, Session } from "@prisma/client";
+import { Chat, Session, Message } from "@prisma/client";
 import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
+import { CreateMessageDto } from './dto/create-message.dto';
 
 @Injectable()
 export class CoreService {
@@ -34,11 +35,15 @@ export class CoreService {
   async removeSession(sessionID:string): Promise<Session> {
     const session = await this.getSessionBySessionID(sessionID);
 
+    if (!session) throw new NotFoundException("Session not found")
+
     return this.prisma.session.delete({where:{sessionID: sessionID}})
   }
 
   async updateSession(sessionID:string, UpdateSessionDto:UpdateSessionDto): Promise<Session>{
     const session = await this.getSessionBySessionID(sessionID);
+
+    if (!session) throw new NotFoundException("Session not found")
 
     return this.prisma.session.update({
       where:{
@@ -65,7 +70,7 @@ export class CoreService {
       const session1 = await this.getSessionBySessionID(sessionID1);
       const session2 = await this.getSessionBySessionID(sessionID2);
   
-      if (!session1 || !session2) throw new NotFoundException("1 или 2 сессии не найдены")
+      if (!session1 || !session2) throw new NotFoundException("1 or 2 sessions not found")
   
       return this.prisma.chat.create({
            data: {
@@ -84,9 +89,8 @@ export class CoreService {
       
       async removeChat(sessionID: string): Promise<void>{
         const session = await this.getSessionBySessionID(sessionID);
-        if (!session) {
-          throw new Error("Сессия не найдена");
-      }
+        if (!session) throw new Error("session not found");
+      
       const chat = await this.prisma.chat.findFirst({
         where:{
           sessions:{
@@ -103,7 +107,34 @@ export class CoreService {
         }
       })
           
-      }
+    }
+    
+    async getAllMessagesInChat(chatId:number): Promise<Message[]>{
+      return await this.prisma.message.findMany({
+        where:{chatId:chatId}
+      })
+    }
+
+    async createMessage(createMessageDto:CreateMessageDto): Promise<Message>{
+      return await this.prisma.message.create({
+        data:{
+          chatId:createMessageDto.chatId,
+          owner:createMessageDto.owner,
+          text:createMessageDto.text,
+        }
+      })
+
+    }
+    async removeAllMessagesInChat(sessionID: string): Promise<void>{
+      const chat = await this.getChatBySession(sessionID)
+      if (!chat) throw new NotFoundException("Chat not found")
+
+      await this.prisma.message.deleteMany({
+        where:{chatId: chat?.id}
+      })
+    }
+
+
 }
 
   

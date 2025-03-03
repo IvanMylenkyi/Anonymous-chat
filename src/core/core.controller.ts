@@ -1,5 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Body, Controller, Get, Injectable, Post } from '@nestjs/common';
+import { CoreService } from './core.service';
 
 
 @Injectable()
-export class CoreController {}
+// @Controller('chat')
+export class CoreController {
+    constructor(private readonly coreService: CoreService){}
+    //test endpoint
+
+    @Post("session")
+    async getSessionBySessionIDtest(@Body() body:{sessionID:string}){
+        return await this.coreService.getSessionBySessionID(body.sessionID)
+    }
+}
