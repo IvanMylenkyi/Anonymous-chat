@@ -3,10 +3,15 @@ import { CoreService } from './core.service';
 
 
 @Injectable()
-// @Controller('chat')
+@Controller('chat')
 export class CoreController {
     constructor(private readonly coreService: CoreService){}
     //test endpoint
+
+    @Get("session")
+    getHello(): string {
+      return this.coreService.getHello();
+    }
 
     @Post("session")
     async getSessionBySessionIDtest(@Body() body:{sessionID:string}){
