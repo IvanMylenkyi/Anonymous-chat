@@ -1,29 +1,34 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { Chat, Session, Message } from "@prisma/client";
 import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { CreateChatDto } from './dto/create-chat.dto';
 
 @Injectable()
 export class CoreService {
   constructor(private readonly prisma:  PrismaService){}
 
 
-    getHello(): string {
-      return 'Hello Wofrfrld!';
-    }
-  
+  //passed
   async getSessionBySessionID(sessionID:string): Promise<Session>{
+    console.log("get stage",sessionID)
     const session = await this.prisma.session.findUnique({
       where:{
-        sessionID:sessionID
+        sessionID: sessionID
       }
+      
     })
-    if (!session) throw new NotFoundException("Session not found")
+
+    if (!session) {
+      throw new NotFoundException("session not found")
+    }
+    console.log(session.sessionID)
 
     return session
   }
+  //passed
 
   async createSession(createSessionDto: CreateSessionDto): Promise<Session>{
     return this.prisma.session.create({
@@ -35,31 +40,30 @@ export class CoreService {
       }
     })
   }
-
-  async removeSession(sessionID:string): Promise<Session> {
+//passed
+  async removeSession(sessionID:string): Promise<void> {
     const session = await this.getSessionBySessionID(sessionID);
+    console.log("remove stage",session.sessionID)
 
-    if (!session) throw new NotFoundException("Session not found")
-
-    return this.prisma.session.delete({where:{sessionID: sessionID}})
+    await this.prisma.session.delete({where:{sessionID: sessionID}})
   }
-
-  async updateSession(sessionID:string, UpdateSessionDto:UpdateSessionDto): Promise<Session>{
-    const session = await this.getSessionBySessionID(sessionID);
+//passed
+  async updateSession(updateSessionDto:UpdateSessionDto): Promise<Session>{
+    const session = await this.getSessionBySessionID(updateSessionDto.sessionID);
 
     if (!session) throw new NotFoundException("Session not found")
 
     return this.prisma.session.update({
       where:{
-        sessionID: sessionID
+        sessionID: updateSessionDto.sessionID
       },
       data:{
-        status: !UpdateSessionDto.status
+        status: !session.status
       }
     })
 
   }
-
+//passed
   async getChatBySession(sessionID:string): Promise<Chat | null>{
       return this.prisma.chat.findFirst({
           where: {
@@ -69,10 +73,10 @@ export class CoreService {
           }
         })
     }
-  
-    async createChat(sessionID1: string, sessionID2: string): Promise<Chat>{
-      const session1 = await this.getSessionBySessionID(sessionID1);
-      const session2 = await this.getSessionBySessionID(sessionID2);
+  //passed
+    async createChat(createChatDto:CreateChatDto): Promise<Chat>{
+      const session1 = await this.getSessionBySessionID(createChatDto.sessionID1);
+      const session2 = await this.getSessionBySessionID(createChatDto.sessionID2);
   
       if (!session1 || !session2) throw new NotFoundException("1 or 2 sessions not found")
   
@@ -90,9 +94,9 @@ export class CoreService {
            }
        });
       }
-      
-      async removeChat(sessionID: string): Promise<void>{
-        const session = await this.getSessionBySessionID(sessionID);
+      //passed
+      async removeChat(createSessionDto:CreateSessionDto): Promise<void>{
+        const session = await this.getSessionBySessionID(createSessionDto.sessionID);
         if (!session) throw new Error("session not found");
       
       const chat = await this.prisma.chat.findFirst({
@@ -104,7 +108,7 @@ export class CoreService {
           }
         }
       });
-
+//passed
       await this.prisma.chat.delete({
         where:{
           id: chat?.id
@@ -112,7 +116,7 @@ export class CoreService {
       })
           
     }
-    
+    //passed
     async getAllMessagesInChat(chatId:number): Promise<Message[]>{
       return await this.prisma.message.findMany({
         where:{chatId:chatId}
