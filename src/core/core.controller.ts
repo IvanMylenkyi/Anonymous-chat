@@ -49,7 +49,7 @@ export class CoreController {
         
 
     }
-//passes
+//passed
     @Delete('removechat')
     async deleteChatBySessionIDtest(@Body() createSessionDto:CreateSessionDto){
         return await this.coreService.removeChat(createSessionDto)
@@ -59,10 +59,15 @@ export class CoreController {
     async getMessagesByChatIdtest(@Param("id") id: number){
         return await this.coreService.getAllMessagesInChat(+id)
     }
-
+//passed
     @Post("createmsg")
     async createMessagetest(@Body() createMessageDto:CreateMessageDto){
         return await this.coreService.createMessage(createMessageDto)
 
+    }
+    //passed
+    @Delete("removemsg")
+    async removeMessagestest(@Body() createSessionDto:CreateSessionDto){
+        return await this.coreService.removeAllMessagesInChat(createSessionDto)
     }
 }

@@ -133,8 +133,8 @@ export class CoreService {
       })
 
     }
-    async removeAllMessagesInChat(sessionID: string): Promise<void>{
-      const chat = await this.getChatBySession(sessionID)
+    async removeAllMessagesInChat(createSessionDto:CreateSessionDto): Promise<void>{
+      const chat = await this.getChatBySession(createSessionDto.sessionID)
       if (!chat) throw new NotFoundException("Chat not found")
 
       await this.prisma.message.deleteMany({
