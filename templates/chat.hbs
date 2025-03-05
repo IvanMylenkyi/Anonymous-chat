@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Chat</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div id="message-placer">
+            {{#each messages}}
+                <p>Owner: {{this.owner}}; message: {{this.message}}</p>
+            {{/each}}
+        </div>
+        <input type="text" name="message" value="">
+        <button type="button">Send</button>
+    </body>
+</html>

@@ -15,6 +15,8 @@ import { CoreService } from 'src/core/core.service';
 export class ChatService {
   constructor(private readonly prisma:  PrismaService){}
 
-
+    getChat(){
+        return {};
+    }
 }
 
