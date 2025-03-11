@@ -18,7 +18,7 @@ model Session {
   sessionID String   @unique
   socketID  String?  @unique
   endTime   DateTime
-  status    Boolean
+  status    Boolean  @default(false)
 
   chat   Chat?  @relation(fields: [chatId], references: [id])
   chatId Int?
