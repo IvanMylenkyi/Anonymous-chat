@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/admin.css">
+        <script defer src="js/admin.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <header>
+            <div class="header-left">
+                Вітаю Admin!
+            </div>
+            <div class="header-right">
+                <a href="/">Home</a>
+                <a href="/search/">Search</a>
+                <a href="/chat/">Chat</a>
+            </div>
+        </header>
+        <main>
+            <div class="tables">
+                <p class="title">Виберіть модель:</p>
+                {{#each tables}}
+                    {{#with this}}
+                        <button class="table" id="{{ table_name }}">{{ table_name }}</button>
+                    {{/with}}
+                {{/each}}
+            </div>
+
+            <div class="records">
+
+            </div>
+
+            <div class="table-background">
+
+            </div>
+        </main>
+    </body>
+</html>
