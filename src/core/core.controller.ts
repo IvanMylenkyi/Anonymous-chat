@@ -13,6 +13,10 @@ export class CoreController {
     //test endpoint
 
     //passed
+    @Get('sessions')
+    async getAllSessions(){
+        return await this.coreService.getAllSessions()
+    }
     @Post("session")
     async getSessionBySessionIDtest(@Body() body: { sessionID: string }){
         console.log("SessionID:", body.sessionID)
@@ -24,7 +28,13 @@ export class CoreController {
     
     @Post("createsession")
     async createSessionBySessionIDtest(@Body() createSessionDto:CreateSessionDto){
-        return await this.coreService.createSession(createSessionDto)
+        try {
+            return await this.coreService.createSession(createSessionDto)
+        } catch (error) {
+            console.log(error);
+            return await this.coreService.getSessionBySessionID(createSessionDto.sessionID);
+        }
+        
 
     }
     //passed
@@ -55,7 +65,7 @@ export class CoreController {
         return await this.coreService.removeChat(createSessionDto)
 //passed
     }
-    @Get(':id')
+    @Get('mu/:id')
     async getMessagesByChatIdtest(@Param("id") id: number){
         return await this.coreService.getAllMessagesInChat(+id)
     }
@@ -69,5 +79,10 @@ export class CoreController {
     @Delete("removemsg")
     async removeMessagestest(@Body() createSessionDto:CreateSessionDto){
         return await this.coreService.removeAllMessagesInChat(createSessionDto)
+    }
+
+    @Get('search')
+    async getPairOfSessions(updateSessionDto:UpdateSessionDto){
+        return this.coreService.pairOfSessionsForChat(updateSessionDto)
     }
 }

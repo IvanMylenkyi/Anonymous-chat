@@ -10,8 +10,8 @@ export class UpdateSessionDto extends PartialType(CreateSessionDto) {
   @IsString()
   sessionID:string;
 
-  @IsOptional()
+
   @IsBoolean()
-  status?: boolean;
+  status: boolean;
 }
 

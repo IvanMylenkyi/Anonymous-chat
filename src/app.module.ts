@@ -5,9 +5,10 @@ import { CoreModule } from './core/core.module';
 import { GlobalMiddlware } from './app.middware';
 import { ChatModule } from './chat/chat.module';
 import { AdminModule } from './admin/admin.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
-  imports: [CoreModule, ChatModule, AdminModule],
+  imports: [CoreModule, ChatModule, SearchModule, AdminModule],
   controllers: [AppController],
   providers: [AppService],
 })
