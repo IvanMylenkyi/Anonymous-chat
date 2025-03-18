@@ -15,28 +15,31 @@ export class SearchService{
 
     ){}
     
-    async connectSessions(updateSessionDto:UpdateSessionDto):Promise<any>{
+    async connectSessions():Promise<any>{
         
         //NOT WORKING -> cannot read status properties ("undefined") 36 line
         
-        // const sessions = await this.prisma.session.count()
-        // const foundsessions = await this.prisma.session.findMany({
-        //     where:{status:false},
-        //       take: 2,
-        //       skip: Math.floor(Math.random() * (sessions - 2)),
+        const sessions = await this.prisma.session.count()
+        const foundsessions = await this.prisma.session.findMany({
+            where:{status:false},
+              take: 2,
+              skip: Math.floor(Math.random() * (sessions - 2)),
               
-        // })
+        })
+
         
-        // const ids = foundsessions.map(session => session.id);
-        // return await this.prisma.session.updateManyAndReturn({
-        //     where:{id:{
-        //         in: ids
-        //     },
-        // },
-        // data:{
-        //     status: !updateSessionDto.status
-        // }
-        // })
+        const ids = foundsessions.map(session => session.id);
+        const st = foundsessions.map(session => session.status)
+        console.log(st)
+        return await this.prisma.session.updateManyAndReturn({
+            where:{id:{
+                in: ids
+            },
+        },
+        data:{
+            status: !st[0]
+        }
+        })
 }
     
     

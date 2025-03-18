@@ -5,7 +5,7 @@ import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { response } from 'express';
+
 
 @Injectable()
 export class CoreService {
@@ -210,7 +210,21 @@ export class CoreService {
     ]);
         return [session1upd, session2upd]
 
-}}
+    
+
+}
+
+  async deleteDeadSessions(): Promise<void>{
+
+    await this.prisma.session.deleteMany({
+      where: {endTime:{
+        lt:new Date()
+      }}
+    })
+      
+}
+
+}
 
   
 

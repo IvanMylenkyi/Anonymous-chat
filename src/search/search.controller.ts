@@ -9,8 +9,8 @@ export class SearchController {
     constructor(private readonly searchService: SearchService){}
 
     @Get()
-    async getPairOfSessions(updateSessionDto:UpdateSessionDto){
-        return this.searchService.connectSessions(updateSessionDto)
+    async getPairOfSessions(){
+        return this.searchService.connectSessions()
     }
 
 }
