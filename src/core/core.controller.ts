@@ -44,6 +44,11 @@ export class CoreController {
         return await this.coreService.removeSession(body.sessionID)
     }
 
+    @Delete('deletesessions')
+    async deleteAllSessions(@Body() body: { sessionID: string }){
+        return await this.coreService.deleteAllSessions();
+    }
+
     
     //passed
 
@@ -82,7 +87,7 @@ export class CoreController {
     }
 
     @Get('search')
-    async getPairOfSessions(updateSessionDto:UpdateSessionDto){
-        return this.coreService.pairOfSessionsForChat(updateSessionDto)
+    async getPairOfSessions(){
+        return this.coreService.pairOfSessionsForChat()
     }
 }

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { Chat, Session, Message } from "@prisma/client";
 import { CreateSessionDto } from './dto/create-session.dto';
@@ -6,19 +6,37 @@ import { UpdateSessionDto } from './dto/update-session.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { response } from 'express';
+import { EventService } from 'src/event-emmiter/event.service';
 
 @Injectable()
-export class CoreService {
-  constructor(private readonly prisma:  PrismaService){}
+export class CoreService implements OnModuleInit {
+  constructor(private readonly prisma:  PrismaService, private readonly eventService: EventService){}
 
+    async onModuleInit() {
+      setInterval(async ()=>{
+        try{
+          const [session1, session2] = await this.pairOfSessionsForChat();
+          console.log(session1, session2)
+          await this.createChat({sessionID1: session1.SessionID, sessionID2: session2.SessionID});
+          this.eventService.emit(session1.sessionID);
+          this.eventService.emit(session2.sessionID);
+        } catch {
+
+        }
+        // await new Promise(resolve => setTimeout(resolve, 1000));
+      }, 1000)
+    }
 
   //passed
   async getAllSessions(): Promise<Session[]>{
     return await this.prisma.session.findMany()
   }
 
+  async deleteAllSessions(){
+    return await this.prisma.session.deleteMany();
+  }
+
   async getSessionBySessionID(sessionID:string): Promise<Session>{
-    console.log("get stage",sessionID)
     const session = await this.prisma.session.findUnique({
       where:{
         sessionID: sessionID
@@ -29,7 +47,7 @@ export class CoreService {
     if (!session) {
       throw new NotFoundException("session not found")
     }
-    console.log(session.sessionID)
+    // console.log(session.sessionID)
 
     return session
   }
@@ -57,7 +75,7 @@ export class CoreService {
 //passed
   async removeSession(sessionID:string): Promise<void> {
     const session = await this.getSessionBySessionID(sessionID);
-    console.log("remove stage",session.sessionID)
+    // console.log("remove stage",session.sessionID)
 
     await this.prisma.session.delete({where:{sessionID: sessionID}})
   }
@@ -156,59 +174,59 @@ export class CoreService {
       })
     }
     
-    async pairOfSessionsForChat(updateSessionDto:UpdateSessionDto): Promise<any>{
+    async pairOfSessionsForChat(): Promise<any>{
 
-    const sessionsCount = await this.prisma.session.count({ where: { status: false } });
+      const sessionsCount = await this.prisma.session.count({ where: { status: true } });
 
-    if (sessionsCount < 2) {
-        throw new Error('Not enough sessions with status false to update');
-    }
+      if (sessionsCount < 2) {
+          throw new Error('Not enough sessions with status true to update');
+      }
 
-    const randomIndex1 = Math.floor(Math.random() * sessionsCount);
-    const randomIndex2 = Math.floor(Math.random() * sessionsCount);
+      const randomIndex1 = Math.floor(Math.random() * sessionsCount);
+      const randomIndex2 = Math.floor(Math.random() * sessionsCount);
 
 
-    let secondIndex = randomIndex2;
-    while (secondIndex === randomIndex1) {
-        secondIndex = Math.floor(Math.random() * sessionsCount);
-    }
+      let secondIndex = randomIndex2;
+      while (secondIndex === randomIndex1) {
+          secondIndex = Math.floor(Math.random() * sessionsCount);
+      }
 
-    console.log('Random indices:', randomIndex1, secondIndex);
+      // console.log('Random indices:', randomIndex1, secondIndex);
 
-    const [session1, session2] = await Promise.all([
-        this.prisma.session.findFirst({ where: { status: false }, skip: randomIndex1 }),
-        this.prisma.session.findFirst({ where: { status: false }, skip: secondIndex }),
-    ]);
+      const [session1, session2] = await Promise.all([
+          this.prisma.session.findFirst({ where: { status: true }, skip: randomIndex1 }),
+          this.prisma.session.findFirst({ where: { status: true }, skip: secondIndex }),
+      ]);
 
-    if (!session1 || !session2) {
-        throw new Error('Failed to find sessions');
-    }
+      if (!session1 || !session2) {
+          throw new Error('Failed to find sessions');
+      }
 
-    console.log('Found sessions:', session1, session2);
-
-    await this.prisma.session.update({
-        where:{
-          sessionID: session1.sessionID
-        },
-        data:{
-          status: !session1.status
-        }
-      })
+      // console.log('Found sessions:', session1, session2);
 
       await this.prisma.session.update({
-        where:{
-          sessionID: session2.sessionID
-        },
-        data:{
-          status: !session2.status
-        }
-      })
+          where:{
+            sessionID: session1.sessionID
+          },
+          data:{
+            status: false
+          }
+        })
 
-      const [session1upd, session2upd] = await Promise.all([
-        this.prisma.session.findFirst({ where: { id: session1.id }}),
-        this.prisma.session.findFirst({ where: { id: session2.id }}),
-    ]);
-        return [session1upd, session2upd]
+        await this.prisma.session.update({
+          where:{
+            sessionID: session2.sessionID
+          },
+          data:{
+            status: false
+          }
+        })
+
+        const [session1upd, session2upd] = await Promise.all([
+          this.prisma.session.findFirst({ where: { id: session1.id }}),
+          this.prisma.session.findFirst({ where: { id: session2.id }}),
+      ]);
+          return [session1upd, session2upd]
 
 }}
 
