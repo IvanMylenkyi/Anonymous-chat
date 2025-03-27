@@ -41,18 +41,31 @@ export class SearchService{
     //     })
     // }
     getSearch(){
-        return {layout: "base", title: "Search"};
+        return {title: "Search"};
     }
     
     async searchForChat(req: Request, res: Response): Promise<void>{
         let session = req.cookies["sessionID"];
         try{
-            await this.coreService.getSessionBySessionID(session);
+            let sessionRecord = await this.coreService.getSessionBySessionID(session);
+            let chat = await this.coreService.getChatBySession(sessionRecord.sessionID);
+            if (chat){
+                try{
+                    await this.coreService.removeChat({ sessionID: sessionRecord.sessionID });
+                } catch {
+
+                }
+            }
         } catch {
             await this.coreService.createSession({sessionID: session})
         }
         return new Promise(async (resolve)=>{
+            this.eventService.eventEmmiter.removeAllListeners(session);
+            console.log(this.eventService.eventEmmiter.listeners(session))
             let isOver = false;
+            let callback = ()=>{
+                isOver = true;
+            }
             await this.prisma.session.update({
                 where: {
                     sessionID: session
@@ -63,17 +76,21 @@ export class SearchService{
             })
             let waitInter = setInterval(()=>{
                 if (!isOver){
-                    if (this.eventService.eventEmmiter.listenerCount(session) <= 0)
-                    this.eventService.on(session, ()=>{
-                        isOver = true;
-                    })
+                    if (this.eventService.eventEmmiter.listenerCount(session) <= 0){
+                        this.eventService.on(session, callback)
+                    }
                 }
                 else{
                     clearInterval(waitInter);
+                    console.log("Listening is over", session)
+                    this.eventService.eventEmmiter.removeAllListeners(session);
                     res.json({message: "Чат найден!"});
                     resolve();
                 }
             });
+            setTimeout(()=>{
+                clearInterval(waitInter);
+            }, 30000);
         });
         
         

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Render, Req } from "@nestjs/common";
+import { Controller, Get, Post, Render, Req, Res } from "@nestjs/common";
 import { SearchService } from "./search.service";
 import { UpdateSessionDto } from "src/core/dto/update-session.dto";
 import { Request, Response } from "express";
@@ -16,7 +16,7 @@ export class SearchController {
     }
     
     @Post()
-    async searchForChat(@Req() req: Request, res: Response){
+    async searchForChat(@Req() req: Request, @Res() res: Response){
         return this.searchService.searchForChat(req, res);
     }
     // @Get()

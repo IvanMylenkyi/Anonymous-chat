@@ -9,9 +9,11 @@ export class EventService{
 
     on(data:string, func: any){
         this.eventEmmiter.on(data, func);
+        console.log(data, "on");
     }
 
     emit(data:string){
         this.eventEmmiter.emit(data);
+        console.log(data, "emit");
     }
 }

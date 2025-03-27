@@ -1,6 +1,12 @@
-{{#>layout}}
-    <h1>Its Search</h1>
-    <form method="post">
-        <button type="submit">Search</button>
-    </form>
+{{#>layout }}
+    <link rel="stylesheet" href="{{ url host "search/css/search.css" }}">
+    <script defer src="{{ url host "search/js/search.js" }}"></script>
+    <div class="content-placer">
+        <div class="search-window">
+            <div class="board">
+
+            </div>
+            <button id="search-button" type="button"><img id="search-image" src="{{ url host "search/img/the_lupa.png" }}" alt="">Search</button>
+        </div>
+    </div>
 {{/layout}}

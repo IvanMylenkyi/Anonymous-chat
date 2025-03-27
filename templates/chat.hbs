@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Chat</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <div id="message-placer">
-            {{#each messages}}
-                <p>Owner: {{this.owner}}; message: {{this.message}}</p>
-            {{/each}}
+{{#>layout }}
+    <link rel="stylesheet" href="{{ url host "chat/css/chat.css" }}">
+    <script defer src="{{ url host "chat/js/chat.js" }}"></script>
+    <div class="content-placer">
+        <div class="chat">
+            <p>{{ error }}</p>
         </div>
-        <input type="text" name="message" value="">
-        <button type="button">Send</button>
-    </body>
-</html>
+        <div class="input">
+            <input id="input" type="text" placeholder="Message...">
+            <button id="send"><img src="{{ url host "chat/img/send.svg" }}" alt=""></button>
+        </div>
+    </div>
+    
+{{/layout}}

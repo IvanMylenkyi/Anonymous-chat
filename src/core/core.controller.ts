@@ -44,7 +44,7 @@ export class CoreController {
         return await this.coreService.removeSession(body.sessionID)
     }
 
-    @Delete('deletesessions')
+    @Get('deletesessions')
     async deleteAllSessions(@Body() body: { sessionID: string }){
         return await this.coreService.deleteAllSessions();
     }

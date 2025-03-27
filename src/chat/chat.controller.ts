@@ -1,5 +1,6 @@
-import { Controller, Get, Render } from "@nestjs/common";
+import { Controller, Get, Render, Req } from "@nestjs/common";
 import { ChatService } from "./chat.service";
+import { Request } from "express";
 
 
 @Controller()
@@ -8,7 +9,7 @@ export class ChatController{
 
     @Get("chat/")
     @Render("chat")
-    getChat(){
-        this.chatService.getChat();
+    getChat(@Req() req: Request){
+        return this.chatService.getChat(req);
     }
 }

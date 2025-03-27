@@ -4,19 +4,19 @@
         <title>{{ title }}</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="base/css/base.css">
+        <link rel="stylesheet" href="{{ url host "main/css/main.css" }}">
     </head>
     <body>
         <header>
             <div class="inner-header">
-                <img src="base/img/logo.png" alt="">
+                <img src="{{ url host "main/img/logo.png" }}" alt="">
                 <h1>Anonimous Chat</h1>
             </div>
             <div class="inner-header">
                 <a href="/">Home</a>
                 <a href="/chat">Chat</a>
                 <a href="/search">Search</a>
-                <a href="https://github.com/IvanMylenkyi/Anonymous-chat"><img src="base/img/github.png" alt=""></a>
+                <a href="https://github.com/IvanMylenkyi/Anonymous-chat"><img src="{{ url host "main/img/github.png" }}" alt=""></a>
             </div>
         </header>
         {{{ body }}}
