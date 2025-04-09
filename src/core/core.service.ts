@@ -47,6 +47,12 @@ export class CoreService implements OnModuleInit {
       }, 1000)
     }
 
+
+  async getSessionsByChat(chatID: number): Promise<Session[]>{
+    return await this.prisma.session.findMany({
+      where: {chatId: chatID}
+    });
+  }
   //passed
   async getAllSessions(): Promise<Session[]>{
     return await this.prisma.session.findMany()
@@ -63,6 +69,8 @@ export class CoreService implements OnModuleInit {
       }
       
     })
+
+    console.log(session)
 
     if (!session) {
       throw new NotFoundException("session not found")

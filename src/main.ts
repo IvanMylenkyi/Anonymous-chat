@@ -28,6 +28,10 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, "..", "static"));
   app.use(cookieParser());
 
+  app.enableCors({
+    allowedHeaders: ['X-Requested-With', 'Content-Type'],
+  });
+
   app.use(xmlparser());
 
   app.use((req, res, next) => {

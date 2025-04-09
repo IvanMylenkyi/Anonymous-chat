@@ -1,6 +1,7 @@
-import { Controller, Get, Render, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post, Render, Req } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 import { Request } from "express";
+import { setDefaultAutoSelectFamily } from "net";
 
 
 @Controller()
@@ -11,5 +12,10 @@ export class ChatController{
     @Render("chat")
     getChat(@Req() req: Request){
         return this.chatService.getChat(req);
+    }
+
+    @Post("updateSocketID/")
+    async updateSocket(@Req() req: Request){
+        await this.chatService.updateSocketID(req.body["sessionID"], req.body["socketID"])
     }
 }

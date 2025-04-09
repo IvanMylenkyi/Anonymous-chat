@@ -19,12 +19,19 @@ export class ChatService {
     async getChat(req: Request){
         let sessionID = req.cookies["sessionID"];
         let chat = await this.coreService.getChatBySession(sessionID);
-        console.log(chat);
         if (chat){
-          console.log(1)
           return {title: `Chat ${chat.id}`, error: ""};
         }
         return {title: "Chat error", error: "chat not found"};
+    }
+
+    async updateSocketID(sessionID: string, socketID: string){
+      await this.prisma.session.update({
+        where: {sessionID: sessionID},
+        data: {
+          socketID: socketID
+        }
+      })
     }
 }
 
