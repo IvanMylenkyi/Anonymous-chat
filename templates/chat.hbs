@@ -3,13 +3,29 @@
     <script defer src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
     <script defer src="{{ url host "chat/js/chat.js" }}"></script>
     <div class="content-placer">
+        <button id="end-chat">Завершити чат<img src="{{ url host "chat/img/off.svg" }}" alt=""></button>
         <div class="chat">
             <p>{{ error }}</p>
+            {{#each messages}}
+                {{#with this}}
+                    <div class="session_{{ owner }}"><p class="mes-text">{{ text }}</p></div>
+                {{/with}}
+            {{/each}}
+            <button class="to-down">⯆</button>
         </div>
         <div class="input">
             <input id="input" type="text" placeholder="Message...">
             <button id="send"><img src="{{ url host "chat/img/send.svg" }}" alt=""></button>
         </div>
     </div>
-    
+    <div class="endbg">
+        <div class="ended-window">
+        <h1>Чат було завершено</h1>
+        <p>Схоже що ви або ваш співрозмовник закінчили бесіду, можете перейти на домашню сторінку або продовжити пошук співрозмовника</p>
+        <div>
+            <a href="/">Home</a>
+            <a href="/search">Search</a>
+        </div>
+    </div>
+    </div>
 {{/layout}}

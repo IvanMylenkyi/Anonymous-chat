@@ -20,9 +20,9 @@ export class ChatService {
         let sessionID = req.cookies["sessionID"];
         let chat = await this.coreService.getChatBySession(sessionID);
         if (chat){
-          return {title: `Chat ${chat.id}`, error: ""};
+          return {title: `Chat ${chat.id}`, error: "", messages: await this.coreService.getAllMessagesInChat(chat.id)};
         }
-        return {title: "Chat error", error: "chat not found"};
+        return {title: "Chat error", error: "chat not found", messages: []};
     }
 
     async updateSocketID(sessionID: string, socketID: string){

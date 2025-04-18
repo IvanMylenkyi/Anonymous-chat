@@ -41,13 +41,41 @@ export class CoreGateway {
         let sessions = await this.coreService.getSessionsByChat(chat.id);
         if (sessions.length == 2){
           for (let ses of sessions){
-            if (ses != session && ses.socketID != null){
-              this.server.to(ses.socketID).emit("message", {message: mes})
-              this.server.to(message["data"]["websocket"]).emit("message_is_sended", {message: mes})
-              await this.coreService.createMessage({ text: mes, owner: session.sessionID, chatId: chat.id})
+            if (ses.socketID != null){
+              if (ses.socketID != session.socketID){
+                this.server.to(ses.socketID).emit("message", {message: mes, owner: ses.socketID})
+                this.server.to(message["data"]["websocketID"]).emit("message_is_sended", {message: mes})
+                await this.coreService.createMessage({ text: mes, owner: session.sessionID, chatId: chat.id})
+              }
             }
           }
         }
+
+      }
+    } catch {}
+
+    
+  }
+  @SubscribeMessage('endchat')
+  async end(@MessageBody() message: WebSocketDto){
+
+    try{
+      let session = await this.coreService.getSessionBySessionID(message["sessionID"]);
+      let chat = await this.coreService.getChatBySession(session.sessionID);
+      if (chat){
+        
+        let sessions = await this.coreService.getSessionsByChat(chat.id);
+        if (sessions.length == 2){
+          for (let ses of sessions){
+            if (ses.socketID != null){
+              if (ses.socketID != session.socketID){
+                this.server.to(ses.socketID).emit("endchat", {})
+                this.server.to(message["data"]["websocketID"]).emit("endchat", {})
+              }
+            }
+          }
+        }
+        this.coreService.removeChat({sessionID: message["sessionID"]})
 
       }
     } catch {}

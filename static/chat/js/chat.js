@@ -16,15 +16,12 @@ function getCookie(name){
 function updateSocketID(){
     let xml = new XMLHttpRequest();
     xml.open("POST","http://" + window.location.hostname + port + "/updateSocketID");
-    // xml.setRequestHeader("Accept", "application/xml")
     xml.setRequestHeader("Content-Type", "application/json");
     xml.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     xml.send(JSON.stringify({sessionID: getCookie("sessionID"), socketID: websocket.id}))
-    // xml.send(`<request><sessionID>${getCookie("sessionID")}</sessionID><socketID>${websocket.id}</socketID></request>`);
 }
 
 
-// let id;
 websocket.on("connect", (socket)=>{
     updateSocketID()
 })
@@ -43,10 +40,73 @@ button.addEventListener("click", ()=>{
     inp.value = "";
 });
 
+const endChatButton = document.querySelector("#end-chat");
+endChatButton.addEventListener("click", (event)=>{
+    websocket.emit("endchat", {sessionID: getCookie("sessionID")})
+})
+
+const endbg = document.querySelector(".endbg");
+websocket.on("endchat", (event)=>{
+    endbg.style.display = "flex";
+})
+
+// Chat visual
+
+const chatDiv = document.querySelector(".chat")
+let myCookie = getCookie("sessionID")
+for (let mes of chatDiv.children){
+    if (mes.classList.length != 0){
+        if (mes.classList.contains("session_" + myCookie)){
+            mes.classList.add("my-mes")
+        } else if (mes.classList[0].includes("session_")){
+            mes.classList.add("mes")
+        }
+        
+    }
+}
+
+
+
 websocket.on("message", (event)=>{
-    console.log("Message to you: " + event["message"]);
+    let mesDiv = document.createElement("div");
+    mesDiv.classList.add("session_" + event["owner"]);
+    mesDiv.classList.add("mes");
+    let mesP = document.createElement("p");
+    mesP.classList.add("mes-text");
+    mesP.textContent = event["message"]
+    mesDiv.appendChild(mesP);
+    let button = chatDiv.children[chatDiv.children.length-1]
+    chatDiv.removeChild(chatDiv.children[chatDiv.children.length-1])
+    chatDiv.appendChild(mesDiv);
+    chatDiv.appendChild(button)
+    chatDiv.scrollTop = chatDiv.scrollHeight;
 })
 
 websocket.on("message_is_sended", (event)=>{
-    console.log("You send: " + event["message"])
+    let mesDiv = document.createElement("div");
+    mesDiv.classList.add("session_" + myCookie);
+    mesDiv.classList.add("my-mes");
+    let mesP = document.createElement("p");
+    mesP.classList.add("mes-text");
+    mesP.textContent = event["message"]
+    mesDiv.appendChild(mesP);
+    let button = chatDiv.children[chatDiv.children.length-1]
+    chatDiv.removeChild(chatDiv.children[chatDiv.children.length-1])
+    chatDiv.appendChild(mesDiv);
+    chatDiv.appendChild(button)
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+})
+
+
+const toDownButton = document.querySelector(".to-down");
+toDownButton.addEventListener("click", (event)=>{
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+})
+
+chatDiv.addEventListener("scroll", (event)=>{
+    if (chatDiv.scrollTop + chatDiv.clientHeight >= chatDiv.scrollHeight-5) {
+        toDownButton.style.display = "none";
+    } else {
+        toDownButton.style.display = "flex";
+    }
 })

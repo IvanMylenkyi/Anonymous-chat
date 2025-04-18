@@ -12,7 +12,16 @@
 .chat{
     width: 80%;
     height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
     background-color: rgb(196, 214, 231);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1vh;
+    padding: 2vh 0vw;
+    scroll-behavior: smooth;
 }
 
 .input{
@@ -51,4 +60,129 @@
 
 #send img{
     height: 100%;
+}
+
+.mes{
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0vh 1vw;
+    /* padding-right: 32vw; */
+    box-sizing: border-box;
+}
+
+.my-mes{
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0vh 1vw;
+    /* padding-left: 32vw; */
+    box-sizing: border-box;
+}
+
+.mes-text{
+    background-color: white;
+    border-radius: calc(1vw + 1vh);
+    font-weight: bold;
+    font-size: calc(1.5vw + 1.5vh);
+    width: fit-content;
+    height: fit-content;
+    padding: 1vh 1vw;
+    max-width: 48vw;
+    overflow-wrap: anywhere;
+}
+
+.to-down{
+    position: fixed;
+    left: 82%;
+    bottom: 12%;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 100%;
+    width: calc(2.2vw + 2.2vh);
+    height: calc(2.2vw + 2.2vh);
+    display: none;
+    flex: 0 0 auto;
+    justify-content: center;
+    align-items: center;
+    font-size: calc(1.5vw + 1.5vh);
+    transition: display 2s;
+}
+
+.to-down:active{
+    background-color: black;
+    color: white;
+}
+
+#end-chat{
+    position: absolute;
+    top: 10.5vh;
+    left: 1.75vw;
+    width: 6vw;
+    height: fit-content;
+    overflow-wrap: anywhere;
+    background-color: black;
+    border: 1px solid red;
+    color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 0.8vw;
+}
+
+#end-chat img{
+    width: 5vw;
+}
+
+.endbg{
+    position: absolute;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ended-window{
+    display: flex;
+    gap: 2vh;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    /* padding: 1vh 1vw; */
+    border-radius: calc(1vw + 1vh);
+    width: 50vw;
+}
+
+.ended-window h1{
+    font-size: calc(1vw + 1vh);
+    margin-top: 1vh;
+    padding-bottom: 1vh;
+    border-bottom: 2px solid black;
+    width: 100%;
+    text-align: center;
+}
+
+.ended-window p{
+    font-size: calc(0.8vw + 0.8vh);
+    margin: 0px 1vw;
+    overflow-wrap: anywhere;
+    text-align: center;
+}
+
+.ended-window div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%
 }

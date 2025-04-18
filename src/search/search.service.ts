@@ -88,8 +88,16 @@ export class SearchService{
                     resolve();
                 }
             });
-            setTimeout(()=>{
+            setTimeout(async ()=>{
                 clearInterval(waitInter);
+                await this.prisma.session.update({
+                    where: {
+                        sessionID: session
+                    },
+                    data: {
+                        status: false
+                    }
+                })
             }, 30000);
         });
         
