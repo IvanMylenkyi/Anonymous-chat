@@ -23,6 +23,11 @@
     border-radius: calc(1.3vw + 2.3vh);
     width: calc(13.6vw + 25.7vh);
     height: calc(9.4vw + 17.3vh);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: calc((9.4vw + 17.3vh) / 3) calc((13.6vw + 25.7vh) / 6); 
+    box-sizing: border-box;
 }
 
 #search-button{
@@ -41,4 +46,21 @@
 #search-image{
     width: calc(4.2vw / 2 + 7.5vh / 2);
     height: calc(4.2vw / 2 + 7.5vh / 2);
+}
+
+.timer{
+    background-color: white;
+    height: 2vh;
+    width: 100%;
+}
+
+.timerbg{
+    background-color: black;
+    height: 2vh;
+    width: 100%;
+}
+
+.error{
+    display: none;
+    color: white;
 }

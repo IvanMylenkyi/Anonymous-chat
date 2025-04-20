@@ -18,6 +18,9 @@
     font-size: calc(2.1vw + 3.8vh);
     border: 0px;
     border-radius: calc(100vw + 100vh);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .content-placer img{

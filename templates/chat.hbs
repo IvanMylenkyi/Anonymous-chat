@@ -5,7 +5,6 @@
     <div class="content-placer">
         <button id="end-chat">Завершити чат<img src="{{ url host "chat/img/off.svg" }}" alt=""></button>
         <div class="chat">
-            <p>{{ error }}</p>
             {{#each messages}}
                 {{#with this}}
                     <div class="session_{{ owner }}"><p class="mes-text">{{ text }}</p></div>
@@ -14,17 +13,28 @@
             <button class="to-down">⯆</button>
         </div>
         <div class="input">
-            <input id="input" type="text" placeholder="Message...">
+            <input id="input" type="text" placeholder="Повідомлення...">
             <button id="send"><img src="{{ url host "chat/img/send.svg" }}" alt=""></button>
         </div>
     </div>
+    {{#if error }}
+        <div class="endbg activated">
+            <div class="ended-window">
+            <h1 class="error">Чат не було знайдено</h1>
+            <p>Ви не розпочали чат, або намагаєтесь приєднатись до завершенного чату</p>
+            <div>
+                <a href="/">Домашня</a>
+                <a href="/search">Пошук</a>
+            </div>
+        </div>
+    {{/if}}
     <div class="endbg">
         <div class="ended-window">
         <h1>Чат було завершено</h1>
         <p>Схоже що ви або ваш співрозмовник закінчили бесіду, можете перейти на домашню сторінку або продовжити пошук співрозмовника</p>
         <div>
-            <a href="/">Home</a>
-            <a href="/search">Search</a>
+            <a href="/">Домашня</a>
+                <a href="/search">Пошук</a>
         </div>
     </div>
     </div>

@@ -65,17 +65,16 @@ export class CoreGateway {
       if (chat){
         
         let sessions = await this.coreService.getSessionsByChat(chat.id);
-        if (sessions.length == 2){
-          for (let ses of sessions){
-            if (ses.socketID != null){
-              if (ses.socketID != session.socketID){
-                this.server.to(ses.socketID).emit("endchat", {})
-                this.server.to(message["data"]["websocketID"]).emit("endchat", {})
-              }
+        for (let ses of sessions){
+          await this.coreService.updateSession({id: ses.id, sessionID: ses.sessionID, status: false})
+          if (ses.socketID != null){
+              // if (ses.socketID != session.socketID){
+              this.server.to(ses.socketID).emit("endchat", {})
+              await this.coreService.removeChat({sessionID: message["sessionID"]})
+                // this.server.to(message["data"]["websocketID"]).emit("endchat", {})
+              // }
             }
           }
-        }
-        this.coreService.removeChat({sessionID: message["sessionID"]})
 
       }
     } catch {}

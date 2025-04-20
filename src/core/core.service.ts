@@ -118,7 +118,8 @@ export class CoreService implements OnModuleInit {
         sessionID: updateSessionDto.sessionID
       },
       data:{
-        status: !session.status
+        status: updateSessionDto.status,
+        chatId: null
       }
     })
 
@@ -158,6 +159,7 @@ export class CoreService implements OnModuleInit {
       }
       //passed
       async removeChat(createSessionDto:CreateSessionDto): Promise<void>{
+        console.log("Chat was deleted")
         const session = await this.getSessionBySessionID(createSessionDto.sessionID);
         if (!session) throw new Error("session not found");
       
@@ -171,11 +173,13 @@ export class CoreService implements OnModuleInit {
         }
       });
 //passed
-      await this.prisma.chat.delete({
-        where:{
-          id: chat?.id
-        }
-      })
+      if (chat){
+        await this.prisma.chat.delete({
+          where:{
+            id: chat?.id
+          }
+        })
+      }
           
     }
     //passed
